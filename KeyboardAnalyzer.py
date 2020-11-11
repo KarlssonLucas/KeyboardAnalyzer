@@ -3,14 +3,21 @@
 ## The script will calculate how much you need to move your fingers in order to write words
 ##
 
-#klay = open("dvorak.txt")
-klay = open("colemak.txt")
-#klay = open("qwerty.txt")
+# IMPORTS AND FILE READING #
+import sys
+keylayfile = sys.argv[1]
+testwordfile = sys.argv[2]
+testWords = open(testwordfile)
+klay = open(keylayfile)
 
-testWords = open("randoms.txt")
+# VARIABLES #
+nRightSide = 0
+nWords = 0
 
-
+# Function for calculating the steps your finger have to move to get to a certain key
+# Sums this up for every key and returns it.
 def distancetravelled(char, keyMatrix):
+    global nRightSide, nWords
     poschar = []
     defaultkeys = [0, 1, 2, 3, 6, 7, 8]
     sumofstrokes = 10
@@ -26,9 +33,14 @@ def distancetravelled(char, keyMatrix):
             sumofstrokes = (abs(1 - poschar[0]) + abs(d - poschar[1]))
             rightside = d
 
+    if rightside > 3:
+        nRightSide +=1
+
+    nWords +=1
     return sumofstrokes
 
 
+# Function generates the matrix of the keyboard layout 
 def run():
     totalstrokes = 0
 
@@ -41,13 +53,7 @@ def run():
             for k, l in enumerate(j):
                 totalstrokes = totalstrokes + distancetravelled(l, keyMatrix)
     print("total times fingers moved: " + str(totalstrokes))
-    #print("left/right side heavy (%): " + -- + " / " + --)
-    #print("total words counted      : " + str(totalstrokes))
+    print("left/right side heavy (%): " + str((nRightSide/nWords)))
 
 
 run()
-
-#TODO - Right/left side heavy
-#TODO - counter for words
-#TODO - cleanup and comment the code
-#TODO - Modularity for what file to run
